@@ -1,5 +1,8 @@
 # BigBrother
 
+## Status
+
+[![Build Status](https://travis-ci.com/aomerk/BigBrother.svg?token=qz5dawjiFydxThABmyYH&branch=master)](https://travis-ci.com/aomerk/BigBrother)
 
 ## Subproject Groups
 
