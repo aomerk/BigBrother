@@ -14,12 +14,17 @@ parser.add_argument("-t", "--type", help="Type of data to find faces from")
 args = parser.parse_args()
 
 
-# Handle images
-def handle_images_in_directory(dirname):
-    for filename in os.listdir(dirname):
-        #  filter out non-image files
-        if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
-            # read frame
+def show_image(window_name, frame):
+    """
+
+    :param window_name: image file name
+    :param frame: actual image
+    :return:
+    """
+    cv2.imshow(window_name, frame)
+    cv2.waitKey(0)
+    cv2.destroyWindow(window_name)
+
             frame = cv2.imread(dirname + filename)
 
             # add frame to all images
