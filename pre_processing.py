@@ -22,8 +22,9 @@ def pre_process_frame(frame):
     img = cv2.resize(img, (640, 480))  # resize
     img_mean = np.array([127, 127, 127])
     img = (img - img_mean) / 128
-    img = np.transpose(img, [2, 0, 1])
-    img = np.expand_dims(img, axis=0)
+    # TODO uncomment for detection
+    # img = np.transpose(img, [2, 0, 1])
+    # img = np.expand_dims(img, axis=0)
     img = img.astype(np.float32)
-    
+
     return img
