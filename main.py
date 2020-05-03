@@ -38,7 +38,6 @@ def get_images(dirname):
             if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
                 # read frame
                 frame = cv2.imread(tmp_dir + filename)
-                show_image('frame', frame)
                 # add frame to all images
                 images.append(frame)
 
@@ -48,8 +47,8 @@ if args.type == "image":
     #  loop through all face images
     get_images(test_face_image_directory)
     # start pre-processing
-    pre_processing.pre_process_frames(images)
-    map(lambda x: show_image(x, 'frame'), images)
+    images = pre_processing.pre_process_frames(images)
+    [show_image('frame', x) for x in images]
 
 
 #  Handle video input
