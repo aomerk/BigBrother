@@ -6,7 +6,7 @@
 
 ## Subproject Groups
 
-not decided yet
+Face Recognition - Ilayda and Ali
 
 ## Design Decisions
 
