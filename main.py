@@ -3,9 +3,9 @@ import os
 
 import cv2
 
-# Global Variables
 import pre_processing
 
+# Global Variables
 images = []
 
 # add compilation flags
@@ -25,7 +25,6 @@ def show_image(window_name, frame):
     cv2.waitKey(0)
     cv2.destroyWindow(window_name)
 
-            frame = cv2.imread(dirname + filename)
 
 def get_images(dirname):
     """
@@ -43,22 +42,14 @@ def get_images(dirname):
                 # add frame to all images
                 images.append(frame)
 
-            # show image
-            cv2.imshow(filename, frame)
-            cv2.waitKey(0)
-            cv2.destroyWindow(filename)
-
 
 if args.type == "image":
-    test_face_image_directory = 'data/images/detection/face/'
+    test_face_image_directory = 'data/images/detection/'
     #  loop through all face images
-    handle_images_in_directory(test_face_image_directory)
-
-    test_no_face_image_directory = 'data/images/detection/no-face/'
-    handle_images_in_directory(test_no_face_image_directory)
-
+    get_images(test_face_image_directory)
     # start pre-processing
     pre_processing.pre_process_frames(images)
+    map(lambda x: show_image(x, 'frame'), images)
 
 
 #  Handle video input
