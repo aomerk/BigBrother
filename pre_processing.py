@@ -1,3 +1,15 @@
+import cv2
+import numpy as np
+
+
+def pre_process_frames(frames):
+    """
+    Pre-Process a list of frames
+    :param frames: list of frames
+    :return: processed list of frames
+    """
+    return [pre_process_frame(f) for f in frames]
+
 
 def pre_process_frame(frame):
     """

@@ -39,6 +39,9 @@ if args.type == "image":
     test_no_face_image_directory = 'data/images/detection/no-face/'
     handle_images_in_directory(test_no_face_image_directory)
 
+    # start pre-processing
+    pre_processing.pre_process_frames(images)
+
 
 #  Handle video input
 elif args.type == "video":
