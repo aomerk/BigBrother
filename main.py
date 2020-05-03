@@ -3,18 +3,29 @@ import os
 
 import cv2
 
+# Global Variables
+import pre_processing
+
+images = []
+
 # add compilation flags
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--type", help="Type of data to find faces from")
-
 args = parser.parse_args()
 
 
 # Handle images
 def handle_images_in_directory(dirname):
     for filename in os.listdir(dirname):
+        #  filter out non-image files
         if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
+            # read frame
             frame = cv2.imread(dirname + filename)
+
+            # add frame to all images
+            images.append(frame)
+
+            # show image
             cv2.imshow(filename, frame)
             cv2.waitKey(0)
             cv2.destroyWindow(filename)
