@@ -27,8 +27,21 @@ def show_image(window_name, frame):
 
             frame = cv2.imread(dirname + filename)
 
-            # add frame to all images
-            images.append(frame)
+def get_images(dirname):
+    """
+    set all images from directory
+    :param dirname: directory to set images from
+    :return:
+    """
+    for tmp_dir in [dirname + 'face/', dirname + 'no-face/']:
+        for filename in os.listdir(tmp_dir):
+            #  filter out non-image files
+            if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
+                # read frame
+                frame = cv2.imread(tmp_dir + filename)
+                show_image('frame', frame)
+                # add frame to all images
+                images.append(frame)
 
             # show image
             cv2.imshow(filename, frame)
