@@ -2,16 +2,25 @@ import argparse
 import os
 
 import cv2
-
-import pre_processing
+import onnx as on
+import onnxruntime as ort
+from onnx_tf.backend import prepare
 
 # Global Variables
+from middlewares.pre_processing.middleware.pre_processor import pre_process_frames
+
 images = []
 
 # add compilation flags
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--type", help="Type of data to find faces from")
 args = parser.parse_args()
+
+onnx_path = '/home/dfirexii/PycharmProjects/BigBrother/models/ultra_light_640.onnx'
+onnx_model = on.load(onnx_path)
+predictor = prepare(onnx_model)
+ort_session = ort.InferenceSession(onnx_path)
+input_name = ort_session.get_inputs()[0].name
 
 
 def show_image(window_name, frame):
@@ -47,7 +56,7 @@ if args.type == "image":
     #  loop through all face images
     get_images(test_face_image_directory)
     # start pre-processing
-    images = pre_processing.pre_process_frames(images)
+    images = pre_process_frames(images, ort_session, input_name)
     [show_image('frame', x) for x in images]
 
 

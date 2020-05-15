@@ -19,21 +19,22 @@ def runner():
     print("Connecting to hello world server…")
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")
+    cap = cv2.VideoCapture(0)
 
-    #  Do 10 requests, waiting each time for a response
-    for request in range(1):
-        frame = cv2.imread("1.jpeg")
-        data = pickle.dumps(frame)
-        print("Sending request %s …" % data)
-        socket.send(data)
+    while True:
+        ret, frame = cap.read()
 
-        #  Get the reply.
-        message = socket.recv()
-        frame = pickle.loads(message)
-        cv2.imshow('frame', frame)
-        cv2.waitKey(0)
-        cv2.destroyWindow('frame')
-        print("Received reply %s [ %s ]" % (request, message))
+        if frame is not None:
+            data = pickle.dumps(frame)
+            socket.send(data)
+
+            #  Get the reply.
+            message = socket.recv()
+            frame = pickle.loads(message)
+            cv2.imshow('frame', frame)
+            # cv2.destroyWindow('frame')
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 
 if __name__ == '__main__':

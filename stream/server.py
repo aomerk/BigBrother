@@ -1,19 +1,33 @@
-import pre_processing
-import pickle
 import time
-
 import cv2
+import numpy as np
+import onnxruntime as ort
+import onnx as on
+from onnx_tf.backend import prepare
 import zmq
 
+from middlewares.post_processing.middleware.post_processor import post_process
+from middlewares.pre_processing.middleware.pre_processor import pre_process_bytes
+from recognizer.recognize import recognize_person
 
-#
-#   Hello World server in Python
+
 #   Binds REP socket to tcp://*:5555
-#   Expects b"Hello" from client, replies with b"World"
-#
+
+
+def message_handler(message, ort_session, input_name) -> bytes:
+    frame = pre_process_bytes(message, ort_session, input_name)
+    _ = recognize_person(frame)
+    message = post_process(frame)
+    return message
 
 
 def runner():
+    onnx_path = '../models/ultra_light_640.onnx'
+    onnx_model = on.load(onnx_path)
+    predictor = prepare(onnx_model)
+    ort_session = ort.InferenceSession(onnx_path)
+    input_name = ort_session.get_inputs()[0].name
+
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://*:5555")
@@ -22,11 +36,9 @@ def runner():
         #  Wait for next request from client
         message = socket.recv()
         # print("Received request: %s" % message)
-        frame = pickle.loads(message)
-        frame = pre_processing.pre_process_frame(frame)
-        message = pickle.dumps(frame)
+        message = message_handler(message, ort_session, input_name)
         #  Do some 'work'
-        time.sleep(1)
+        # time.sleep(0.001)
 
         #  Send reply back to client
         socket.send(message)
