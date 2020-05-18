@@ -7,7 +7,7 @@ import onnxruntime as ort
 from onnx_tf.backend import prepare
 
 # Global Variables
-from middlewares.pre_processing.middleware.pre_processor import pre_process_frames
+from middleware.pre_processor import pre_process_frames
 
 images = []
 
