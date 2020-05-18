@@ -6,8 +6,9 @@ from keras.models import load_model
 from keras.models import Model, Sequential
 from keras.layers import Input, Convolution2D, ZeroPadding2D, MaxPooling2D, Flatten, Dense, Dropout, Activation
 from keras.preprocessing.image import load_img, save_img, img_to_array
+import time
 
-face_net = load_model('facenet_keras.h5')
+face_net = load_model('facenet_keras.h5', compile = False)
 face_net.load_weights('facenet_keras_weights.h5')
  
 
@@ -48,6 +49,7 @@ def face_embedding(face):
 def euclidian_distance(emb1, emb2):
 	diff = np.subtract(emb1, emb2)
 	euclidian = np.sum(np.square(diff))
+	print("dist: " + str(euclidian))
 	return euclidian
 
 def cosine_similarity(emb1, emb2):
@@ -78,6 +80,7 @@ def data_set(path):
 def input_data(path):
 	faces = []
 	labels = []
+	pic_n = []
 	#there are pictures in folders, f_name corresponds to id
 	size = (160, 160)
 	folders = glob.glob(path + "/*")
@@ -87,43 +90,49 @@ def input_data(path):
 			face = load_img(pic_name, target_size = size)
 			faces.append(face)
 			labels.append(f_name.split("/")[1])
+			pic_n.append(pic_name.split("/")[2])
 
-	return faces, np.array(labels)
+	return faces, np.array(labels), np.array(pic_n)
 
-def cross_predict(test, train, exp_tst, exp_tr):
+def cross_predict(test, train, exp_tst, exp_tr, pics):
 	score = 0
 	false = []
 	true = []
 	n = len(test)
+	print(len(test))
+	print(len(train))
 	for i, img_test in enumerate(test):
+		s_time = time.time()
+
 		for j, img_train in enumerate(train):
+			print("i: " + str(i) + " | j: " + str(j))
+			print(str(exp_tst[i]) +" : " +str(exp_tr[j]) + "/" + str(pics[j]))
 			ver = verification(img_test, img_train, "euclidian", 1)
-			expected = 1 if exp_tst[i] == exp_tr[j] else 0
-			result = 1 if ver == expected else 0
+			expected = (exp_tst[i] == exp_tr[j])
+			result = (ver == expected)
 			score += result
-			
+			print("result: " + str(result))
+			print("expected: " + str(expected))
 			if result == 0:
-				false.append("test: "+ str(exp_tst[i]) + " train: " + str(exp_tr[j]))
+				false.append("test: "+ str(exp_tst[i]) + " train: " + str(exp_tr[j]) + "/"+str(pics[j]))
 			else:
-				true.append("test: "+ str(exp_tst[i]) + " train: " + str(exp_tr[j]))
-			
-	print(expected_tst)
-	print(exp_tr)
+				true.append("test: "+ str(exp_tst[i]) + " train: " + str(exp_tr[j])+ "/"+str(pics[j]))
+			print("************************")
+		print("time :" + str(time.time()-s_time))
+
 	
-	print("Total pics: " + str(n))
+	
 	print("Score: " + str(score))
 	print("False predictions: ")
 	print(false)
-	print("True predictions: ")
-	print(true)
 	
 	return score, false
 
 
 
 to_predict, expected_tst = data_set("input_data")
-to_compare, expected_tr = input_data("data")
-score, falses = cross_predict(to_predict, to_compare, expected_tst, expected_tr)
+to_compare, expected_tr, pics= input_data("data")
+score, falses = cross_predict(to_predict, to_compare, expected_tst, expected_tr, pics)
 
 
 
