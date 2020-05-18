@@ -16,7 +16,7 @@ def message_handler(message, ort_session, input_name) -> bytes:
 
 
 def runner():
-    onnx_path = '/home/dfirexii/PycharmProjects/BigBrother/face_recognition/models/ultra_light_640.onnx'
+    onnx_path = '/PATH TO BigBrother/face_recognition/models/ultra_light_640.onnx'
     onnx_model = on.load(onnx_path)
     _ = prepare(onnx_model)
     ort_session = ort.InferenceSession(onnx_path)
