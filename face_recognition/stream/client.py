@@ -30,8 +30,9 @@ def runner():
 
             #  Get the reply.
             message = socket.recv()
-            frame = pickle.loads(message)
-            cv2.imshow('frame', frame)
+            if message is not None:
+                frame = pickle.loads(message)
+                cv2.imshow('frame', frame)
             # cv2.destroyWindow('frame')
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

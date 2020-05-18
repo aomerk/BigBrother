@@ -31,7 +31,7 @@ def pre_process_frames(frames, ort_session, input_name):
     :param frames: list of frames
     :return: processed list of frames
     """
-    return [pre_process_frame(f, ort_session, input_name) for f in frames]
+    return [pre_process_frame(f, ort_session, input_name)[0] for f in frames]
 
 
 def pre_process_frame(frame, ort_session, input_name):
@@ -50,4 +50,4 @@ def pre_process_frame(frame, ort_session, input_name):
 
 def pre_process_bytes(message, ort_session, input_name):
     frame = pickle.loads(message)
-    return pre_process_frame(frame, ort_session, input_name)
+    return pre_process_frame(frame, ort_session, input_name)[0]
