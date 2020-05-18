@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--type", help="Type of data to find faces from")
 args = parser.parse_args()
 
-onnx_path = '/home/dfirexii/PycharmProjects/BigBrother/models/ultra_light_640.onnx'
+onnx_path = '/PATH TO MODEL/ultra_light_640.onnx'
 onnx_model = on.load(onnx_path)
 predictor = prepare(onnx_model)
 ort_session = ort.InferenceSession(onnx_path)

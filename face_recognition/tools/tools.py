@@ -6,7 +6,7 @@ from cv2 import cv2
 # SAVE FRAMES TO DIRECTORY
 from face_recognition.middlewares.pre_processing import pre_processor
 
-onnx_path = '/home/dfirexii/PycharmProjects/BigBrother/face_recognition/models/ultra_light_640.onnx'
+onnx_path = '/PATH To /BigBrother/face_recognition/models/ultra_light_640.onnx'
 
 
 
@@ -16,7 +16,7 @@ def process_db():
 
     ort_session = ort.InferenceSession(onnx_path)
     input_name = ort_session.get_inputs()[0].name
-    test_face_image_directory = '/home/dfirexii/PycharmProjects/BigBrother/face_recognition/data/gt_db'
+    test_face_image_directory = 'PATH TO /BigBrother/face_recognition/data/gt_db'
 
     for subdir, dirs, files in os.walk(test_face_image_directory):
         for filename in files:
