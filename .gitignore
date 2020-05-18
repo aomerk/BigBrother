@@ -5,5 +5,6 @@ data/
 __pycache__/pre_processing.cpython-37.pyc
 
 __pycache__/main_test.cpython-37-pytest-5.4.1.pyc
+.pytest_cache
 
 .vscode/

@@ -1,13 +1,14 @@
 import os
 
-from cv2 import cv2
 import onnxruntime as ort
-
+from cv2 import cv2
 
 # SAVE FRAMES TO DIRECTORY
 from face_recognition.middlewares.pre_processing import pre_processor
 
 onnx_path = '/home/dfirexii/PycharmProjects/BigBrother/face_recognition/models/ultra_light_640.onnx'
+
+
 
 def process_db():
     if onnx_path == "":
@@ -21,8 +22,8 @@ def process_db():
         for filename in files:
             filename = os.path.join(subdir, filename)
             print(filename)
-            #  filter out non-image files
             if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
+                #  filter out non-image files
                 a = cv2.imread(filename)
                 a, b = pre_processor.pre_process_frame(a, ort_session=ort_session, input_name=input_name)
                 for x in b:
@@ -30,7 +31,7 @@ def process_db():
                         # cv2.imshow("inp", x)
                         cv2.imwrite(filename, x)
                         # cv2.waitKey(0)
-    # # self.fail()
+
 
 if __name__ == '__main__':
     process_db()
