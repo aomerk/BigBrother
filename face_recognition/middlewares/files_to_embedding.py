@@ -13,7 +13,7 @@ def convert_to_embedding(path):
 	for f_name in f_names:
 		face = load_img(path + "/" + f_name, target_size = size)
 		emb = face_embedding(face)
-		embs.append(face)
+		embs.append(emb)
 	
 	np.save("embs" + "_" + path.split("/")[-1] , emb)
 	np.save("file_names" + "_" + path.split("/")[-1], f_names)
