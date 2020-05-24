@@ -1,6 +1,10 @@
 import pickle
 
+import cv2
+
 from face_recognition.middlewares.detector import detector
+from face_recognition.middlewares.pre_processing.align_faces import align_face
+from face_recognition.recognizer.recognize import recognize_person
 
 
 class Person:
@@ -43,7 +47,13 @@ def pre_process_frame(frame, ort_session, input_name):
     :return: processed image
     """
     # preprocess img acquired
-    img, detected_faces = detector.find_face(frame, ort_session, input_name)
+    frame, boxes = detector.find_face(frame, ort_session, input_name)
+    aligned_faces = []
+    for i in range(boxes.shape[0]):
+        box = boxes[i, :]
+        x1, y1, x2, y2 = box
+        aligned_faces.append(align_face(frame, box))
+
     labels = []
     for i in range(boxes.shape[0]):
         aligned_face = aligned_faces[i]
@@ -59,8 +69,7 @@ def pre_process_frame(frame, ort_session, input_name):
         text = f"face: {labels[i]}"
         cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
 
-
-    return img, detected_faces
+    return frame, aligned_faces
 
 
 def pre_process_bytes(message, ort_session, input_name):
