@@ -127,18 +127,6 @@ def find_face(frame, ort_session, input_name) -> (any, any):
 
     confidences, boxes = ort_session.run(None, {input_name: img})
     boxes, labels, probs = predict(w, h, confidences, boxes, 0.7)
-    detected_faces = []
-    for i in range(boxes.shape[0]):
-        box = boxes[i, :]
-        x1, y1, x2, y2 = box
 
-        frame = align_face(frame, box)
 
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
-
-        cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
-        font = cv2.FONT_HERSHEY_DUPLEX
-        text = f"face: {labels[i]}"
-        cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
-
-    return frame, detected_faces
+    return frame, boxes
