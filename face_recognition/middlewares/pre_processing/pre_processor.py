@@ -51,7 +51,6 @@ def pre_process_frame(frame, ort_session, input_name):
     aligned_faces = []
     for i in range(boxes.shape[0]):
         box = boxes[i, :]
-        x1, y1, x2, y2 = box
         aligned_faces.append(align_face(frame, box))
 
     labels = []
