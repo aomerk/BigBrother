@@ -7,7 +7,7 @@ import onnxruntime as ort
 from onnx_tf.backend import prepare
 
 # Global Variables
-from middleware.pre_processor import pre_process_frames
+from face_recognition.middlewares.pre_processing.pre_processor import pre_process_frames
 
 images = []
 

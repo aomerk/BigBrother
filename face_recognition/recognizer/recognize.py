@@ -6,8 +6,8 @@ from keras.models import load_model
 # from keras.models import load_weights
 from keras.preprocessing.image import load_img
 
-face_net = load_model('facenet_keras.h5', compile=False)
-face_net.load_weights('facenet_keras_weights.h5')
+face_net = load_model('../models/facenet_keras.h5', compile=False)
+face_net.load_weights('../models/facenet_keras_weights.h5')
 
 
 def recognize_person(frame):
