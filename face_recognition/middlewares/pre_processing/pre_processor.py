@@ -45,6 +45,7 @@ def pre_process_frame(frame, ort_session, input_name):
     # preprocess img acquired
     img, detected_faces = detector.find_face(frame, ort_session, input_name)
 
+
     return img, detected_faces
 
 

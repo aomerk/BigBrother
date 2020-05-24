@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from face_recognition.middlewares.pre_processing.align_faces import align_face
+
 
 def area_of(left_top, right_bottom):
     """
@@ -129,7 +131,8 @@ def find_face(frame, ort_session, input_name) -> (any, any):
     for i in range(boxes.shape[0]):
         box = boxes[i, :]
         x1, y1, x2, y2 = box
-        detected_faces.append(np.copy(frame[y1:y2, x1:x2]))
+
+        frame = align_face(frame, box)
 
         cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
 
