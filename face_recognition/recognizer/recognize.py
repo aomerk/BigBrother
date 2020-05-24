@@ -21,7 +21,7 @@ def recognize_person(frame):
     time.sleep(0.01)
 
     # Return person info + frame ?
-    return frame
+    return "omer"
 
 
 def verification(face1, face2, dist_type, l2):
