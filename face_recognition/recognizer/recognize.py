@@ -1,13 +1,10 @@
-import glob
 import time
 
 import numpy as np
-from keras.models import load_model
-# from keras.models import load_weights
-from keras.preprocessing.image import load_img
 
-face_net = load_model('../models/facenet_keras.h5', compile=False)
-face_net.load_weights('../models/facenet_keras_weights.h5')
+from init import embeddings
+from init import labels
+from init import face_net
 
 
 def recognize_person(frame):
@@ -17,17 +14,28 @@ def recognize_person(frame):
     :return: person info? TODO
     """
 
+    # face_embedding array
     # DO STUFF
-    time.sleep(0.01)
+    face = face_embedding(frame)
+    for idx, embed in enumerate(embeddings):
+        found, dist = verification(face, embed, "euclidian", 1)
+        if found == 1:
+            return labels[idx], dist
 
     # Return person info + frame ?
-    return "omer"
+    return "unknown", 100
 
 
 def verification(face1, face2, dist_type, l2):
     if l2 == 1:
+        # input: image
+        """
         emb1 = normalizer_l2(face_embedding(face1))
         emb2 = normalizer_l2(face_embedding(face2))
+        """
+        # input: embedding
+        emb1 = normalizer_l2(face1)
+        emb2 = normalizer_l2(face2)
     elif l2 == 0:
         emb1 = face_embedding(face1)
         emb2 = face_embedding(face2)
@@ -44,9 +52,9 @@ def verification(face1, face2, dist_type, l2):
         raise '%d is undefined, should be euclidian or cosine_similarity' % dist_type
 
     if dist < threshold:
-        return 1
+        return 1, dist
     else:
-        return 0
+        return 0, dist
 
 
 def face_embedding(face):
@@ -74,45 +82,10 @@ def normalizer_l2(x):
     return x / np.sqrt(np.sum(np.multiply(x, x)))
 
 
-# folder_name corresponds to id
-def data_set(path):
-    faces = []
-    labels = []
-    size = (160, 160)
-    # path = "input_data"
-    # there are pictures in input data without any folders with label name
-    inputs = glob.glob(path + "/*.jpg")
-    for filename in inputs:
-        id = filename.split(".")[0].split("/")[1]
-        face = load_img(filename, target_size=size)
-        faces.append(face)
-        labels.append(id)
-    return faces, labels
-
-
-# file_name corresponds to id
-def input_data(path):
-    faces = []
-    labels = []
-    pic_n = []
-    # there are pictures in folders, f_name corresponds to id
-    size = (160, 160)
-    folders = glob.glob(path + "/*")
-    for f_name in folders:
-        pics = glob.glob(f_name + "/*.jpg")
-        for pic_name in pics:
-            face = load_img(pic_name, target_size=size)
-            faces.append(face)
-            labels.append(f_name.split("/")[1])
-            pic_n.append(pic_name.split("/")[2])
-
-    return faces, np.array(labels), np.array(pic_n)
-
-
 def cross_predict(test, train, exp_tst, exp_tr, pics):
     score = 0
     false = []
-    true = []
+
     n = len(test)
     print(len(test))
     print(len(train))
@@ -121,27 +94,23 @@ def cross_predict(test, train, exp_tst, exp_tr, pics):
 
         for j, img_train in enumerate(train):
             print("i: " + str(i) + " | j: " + str(j))
-            print(str(exp_tst[i]) + " : " + str(exp_tr[j]) + "/" + str(pics[j]))
-            ver = verification(img_test, img_train, "euclidian", 1)
+            print(str(exp_tst[i]) + "/" + str(pics[i]) + " : " + str(exp_tr[j]))
+            ver, dist = verification(img_test, img_train, "euclidian", 1)
             expected = (exp_tst[i] == exp_tr[j])
             result = (ver == expected)
             score += result
             print("result: " + str(result))
             print("expected: " + str(expected))
             if result == 0:
-                false.append("test: " + str(exp_tst[i]) + " train: " + str(exp_tr[j]) + "/" + str(pics[j]))
-            else:
-                true.append("test: " + str(exp_tst[i]) + " train: " + str(exp_tr[j]) + "/" + str(pics[j]))
+                false.append(
+                    "test: " + str(exp_tst[i]) + "/" + str(pics[i]) + " train:" + str(exp_tr[j]) + " : " + str(dist))
+
             print("************************")
         print("time :" + str(time.time() - s_time))
 
     print("Score: " + str(score))
     print("False predictions: ")
-    print(false)
+    for i in false:
+        print(i)
 
     return score, false
-
-
-to_predict, expected_tst = data_set("input_data")
-to_compare, expected_tr, pics = input_data("data")
-score, falses = cross_predict(to_predict, to_compare, expected_tst, expected_tr, pics)

@@ -25,8 +25,6 @@ def runner():
             # dump and send frame
             data = pickle.dumps(frame)
             socket.send(data)
-            cv2.imshow("l", frame)
-
             # show reply to client
             message = socket.recv()
             if message is not None:
