@@ -71,17 +71,18 @@ def hard_nms(box_scores, iou_threshold, top_k=-1, candidate_size=200):
 def predict(width, height, confidences, boxes, prob_threshold, iou_threshold=0.5, top_k=-1):
     """
     Select boxes that contain human faces
-    Args:
-        width: original image width
-        height: original image height
-        confidences (N, 2): confidence array
-        boxes (N, 4): boxes array in corner-form
-        iou_threshold: intersection over union threshold.
-        top_k: keep top_k results. If k <= 0, keep all the results.
+    params:
+    :param width: original image width
+    :param    height: original image height
+    :param confidences: (N, 2): confidence array
+    :param boxes: (N, 4): boxes array in corner-form
+    :param prob_threshold
+    :param iou_threshold: intersection over union threshold.
+    :param top_k: keep top_k results. If k <= 0, keep all the results.
     Returns:
-        boxes (k, 4): an array of boxes kept
-        labels (k): an array of labels for each boxes kept
-        probs (k): an array of probabilities for each boxes being in corresponding labels
+    :return  boxes: (k, 4): an array of boxes kept
+    :return  labels: (k): an array of labels for each boxes kept
+    :return  probs :(k): an array of probabilities for each boxes being in corresponding labels
     """
     boxes = boxes[0]
     confidences = confidences[0]
@@ -125,17 +126,4 @@ def find_face(frame, ort_session, input_name) -> (any, any):
 
     confidences, boxes = ort_session.run(None, {input_name: img})
     boxes, labels, probs = predict(w, h, confidences, boxes, 0.7)
-    detected_faces = []
-    for i in range(boxes.shape[0]):
-        box = boxes[i, :]
-        x1, y1, x2, y2 = box
-        detected_faces.append(np.copy(frame[y1:y2, x1:x2]))
-
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
-
-        cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
-        font = cv2.FONT_HERSHEY_DUPLEX
-        text = f"face: {labels[i]}"
-        cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
-
-    return frame, detected_faces
+    return frame, boxes

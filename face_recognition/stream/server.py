@@ -16,7 +16,7 @@ def message_handler(message, ort_session, input_name) -> bytes:
 
 
 def runner():
-    onnx_path = '/PATH TO BigBrother/face_recognition/models/ultra_light_640.onnx'
+    onnx_path = '../models/ultra_light_640.onnx'
     onnx_model = on.load(onnx_path)
     _ = prepare(onnx_model)
     ort_session = ort.InferenceSession(onnx_path)
@@ -30,7 +30,7 @@ def runner():
     while True:
         #  Wait for next request from client
         message = socket.recv()
-
+        print(message)
         # print("Received request: %s" % message)predictor
         message = message_handler(message, ort_session, input_name)
 
