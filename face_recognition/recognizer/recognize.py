@@ -20,6 +20,7 @@ def recognize_person(frame):
     for idx, embed in enumerate(embeddings):
         found, dist = verification(face, embed, "euclidian", 1)
         if found == 1:
+            print(labels[idx])
             return labels[idx], dist
 
     # Return person info + frame ?
@@ -69,7 +70,6 @@ def face_embedding(face):
 def euclidian_distance(emb1, emb2):
     diff = np.subtract(emb1, emb2)
     euclidian = np.sum(np.square(diff))
-    print("dist: " + str(euclidian))
     return euclidian
 
 
@@ -86,31 +86,16 @@ def cross_predict(test, train, exp_tst, exp_tr, pics):
     score = 0
     false = []
 
-    n = len(test)
-    print(len(test))
-    print(len(train))
     for i, img_test in enumerate(test):
         s_time = time.time()
 
         for j, img_train in enumerate(train):
-            print("i: " + str(i) + " | j: " + str(j))
-            print(str(exp_tst[i]) + "/" + str(pics[i]) + " : " + str(exp_tr[j]))
             ver, dist = verification(img_test, img_train, "euclidian", 1)
             expected = (exp_tst[i] == exp_tr[j])
             result = (ver == expected)
             score += result
-            print("result: " + str(result))
-            print("expected: " + str(expected))
             if result == 0:
                 false.append(
                     "test: " + str(exp_tst[i]) + "/" + str(pics[i]) + " train:" + str(exp_tr[j]) + " : " + str(dist))
-
-            print("************************")
-        print("time :" + str(time.time() - s_time))
-
-    print("Score: " + str(score))
-    print("False predictions: ")
-    for i in false:
-        print(i)
 
     return score, false

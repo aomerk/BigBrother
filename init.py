@@ -14,11 +14,9 @@ embeddings_path = os.environ.get("EMBEDDINGS_PATH")
 embeddings = np.load(embeddings_path)
 
 labels_path = os.environ.get("LABELS_PATH")
-labels = np.load(embeddings_path)
+labels = np.load("/home/dfirexii/PycharmProjects/BigBrother/face_recognition/data/labels_data.npy")
 
 # detect faces
-
-
 
 onnx_path = os.environ.get('ONNX_MODEL')
 onnx_model = on.load(onnx_path)

@@ -50,7 +50,6 @@ def pre_process_frame(frame, ort_session, input_name):
     """
     # detect faces, original frame and face boxes
     a, boxes = detector.find_face(frame, ort_session, input_name)
-    cv2.imshow("a", a)
 
     # align faces
     aligned_faces = []
@@ -68,15 +67,15 @@ def pre_process_frame(frame, ort_session, input_name):
         labels.append(recognize_person(aligned_face))
 
     # mark faces
-    # for i in range(boxes.shape[0]):
-    #     box = boxes[i, :]
-    #     x1, y1, x2, y2 = box
-    #     cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
-    #
-    #     cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
-    #     font = cv2.FONT_HERSHEY_DUPLEX
-    #     text = f"user: {labels[i]}"
-    #     cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
+    for i in range(boxes.shape[0]):
+        box = boxes[i, :]
+        x1, y1, x2, y2 = box
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
+
+        cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
+        font = cv2.FONT_HERSHEY_DUPLEX
+        text = f"user: {labels[i]}"
+        cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
 
     return frame, aligned_faces
 

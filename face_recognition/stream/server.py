@@ -10,7 +10,6 @@ from face_recognition.recognizer.recognize import recognize_person
 
 def message_handler(message, ort_session, input_name) -> bytes:
     frame = pre_process_bytes(message, ort_session, input_name)
-    _ = recognize_person(frame)
     message = post_process(frame)
     return message
 
@@ -30,7 +29,6 @@ def runner():
     while True:
         #  Wait for next request from client
         message = socket.recv()
-        print(message)
         # print("Received request: %s" % message)predictor
         message = message_handler(message, ort_session, input_name)
 
