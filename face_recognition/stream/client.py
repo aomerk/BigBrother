@@ -1,4 +1,5 @@
 import pickle
+import time
 
 import cv2
 import zmq
@@ -22,6 +23,8 @@ def runner():
     while True:
         ret, frame = cap.read()
         if frame is not None:
+            start = time.time()
+
             # dump and send frame
             data = pickle.dumps(frame)
             socket.send(data)
@@ -30,7 +33,13 @@ def runner():
             if message is not None:
                 frame = pickle.loads(message)
                 cv2.imshow('frame', frame)
-            # cv2.destroyWindow('frame')
+                end = time.time()
+                seconds = end - start
+                print("Time taken : {0} seconds".format(seconds))
+                fps = 1 / seconds
+                print("Estimated frames per second : {0}".format(fps))
+
+        # cv2.destroyWindow('frame')
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
