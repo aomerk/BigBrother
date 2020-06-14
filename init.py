@@ -14,7 +14,7 @@ embeddings_path = os.environ.get("EMBEDDINGS_PATH")
 embeddings = np.load(embeddings_path)
 
 labels_path = os.environ.get("LABELS_PATH")
-labels = np.load("/home/dfirexii/PycharmProjects/BigBrother/face_recognition/data/labels_data.npy")
+labels = np.load(labels_path)
 
 # detect faces
 
