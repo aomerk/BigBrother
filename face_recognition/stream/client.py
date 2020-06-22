@@ -18,7 +18,7 @@ def runner():
     print("Connecting to authentication server")
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("/home/dfirexii/PycharmProjects/BigBrother/face_recognition/data/video.mp4")
 
     while True:
         ret, frame = cap.read()

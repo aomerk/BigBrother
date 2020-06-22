@@ -20,12 +20,13 @@ class FaceFrame:
     def get_person(self) -> Person:
         return self.person
 
-    def __init__(self, top_start, top_end, bottom_start, bottom_end, frame):
-        self.person = Person("omer")
+    def __init__(self, top_start, top_end, bottom_start, bottom_end, name):
+        self.person = Person(name)
         self.top_start = top_start
         self.top_end = top_end
         self.bottom_start = bottom_start
         self.bottom_end = bottom_end
+
 
 
 def pre_process_frames(frames, ort_session, input_name):
@@ -66,6 +67,7 @@ def pre_process_frame(frame, ort_session, input_name):
         aligned_face = aligned_faces[i]
         labels.append(recognize_person(aligned_face))
 
+    people = []
     # mark faces
     for i in range(boxes.shape[0]):
         box = boxes[i, :]
@@ -75,9 +77,11 @@ def pre_process_frame(frame, ort_session, input_name):
         cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         text = f"user: {labels[i]}"
+        pers = FaceFrame(x1,y1,x2,y1,labels[i])
+        people = people.append(pers)
         cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
 
-    return frame, aligned_faces
+    return people
 
 
 def pre_process_bytes(message, ort_session, input_name):

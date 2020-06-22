@@ -3,6 +3,6 @@ import pickle
 import cv2
 
 
-def post_process(frame) -> bytes:
-    message = pickle.dumps(frame)
+def post_process(people) -> bytes:
+    message = pickle.dumps(people)
     return message

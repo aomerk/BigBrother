@@ -8,8 +8,6 @@ from imutils import face_utils
 from keras.models import load_model
 from onnx_tf.backend import prepare
 
-# from keras.models import load_weights
-
 embeddings_path = os.environ.get("EMBEDDINGS_PATH")
 embeddings = np.load(embeddings_path)
 

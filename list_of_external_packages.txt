@@ -5,3 +5,8 @@ zmq
 tensorflow
 tensorflow-addons
 imutils
+dlib
+onnx
+onnxruntime
+keras
+onnt_tf

@@ -1,10 +1,11 @@
+import cv2
 import onnx as on
 import onnxruntime as ort
 import zmq
 from onnx_tf.backend import prepare
 
 from face_recognition.middlewares.post_processing.middleware.post_processor import post_process
-from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes
+from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes, pre_process_frame
 from face_recognition.recognizer.recognize import recognize_person
 
 
@@ -25,18 +26,24 @@ def runner():
     socket = context.socket(zmq.REP)
 
     socket.bind("tcp://*:5555")
+    cap = cv2.VideoCapture("/home/dfirexii/PycharmProjects/BigBrother/face_recognition/data/video.mp4")
 
     while True:
-        #  Wait for next request from client
-        message = socket.recv()
-        # print("Received request: %s" % message)predictor
-        message = message_handler(message, ort_session, input_name)
+        ret, frame = cap.read()
+        if frame is not None:
+            #  Wait for next request from client
+            # message = socket.recv()
+            # print("Received request: %s" % message)predictor
+            a = pre_process_frame(frame, ort_session, input_name)
 
-        #  Do some 'work'
-        # time.sleep(0.001)
+            #  Do some 'work'
+            # time.sleep(0.001)
 
-        #  Send reply back to client
-        socket.send(message)
+            #  Send reply back to client
+            # socket.send(message)
+            cv2.imshow('frame', a[0])
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
 
 if __name__ == '__main__':
