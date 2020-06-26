@@ -1,3 +1,6 @@
+import os
+import pickle
+
 import cv2
 import onnx as on
 import onnxruntime as ort
@@ -5,8 +8,8 @@ import zmq
 from onnx_tf.backend import prepare
 
 from face_recognition.middlewares.post_processing.middleware.post_processor import post_process
-from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes, pre_process_frame
-from face_recognition.recognizer.recognize import recognize_person
+from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes
+from face_recognizer import FaceRecognizer
 
 
 def message_handler(message, ort_session, input_name) -> bytes:
@@ -28,13 +31,19 @@ def runner():
     socket.bind("tcp://*:5555")
     cap = cv2.VideoCapture("/home/dfirexii/PycharmProjects/BigBrother/face_recognition/data/video.mp4")
 
+    recog = FaceRecognizer(os.environ.get("EMBEDDINGS_PATH"), os.environ.get("LABELS_PATH"),
+                           os.environ.get('ONNX_MODEL'),
+                           os.environ.get('SHAPE_MODEL'),
+                           os.environ.get('RECON_MODEL'),
+                           os.environ.get('RECON_WEIGHTS'))
     while True:
         ret, frame = cap.read()
         if frame is not None:
             #  Wait for next request from client
             # message = socket.recv()
             # print("Received request: %s" % message)predictor
-            a = pre_process_frame(frame, ort_session, input_name)
+            message = pickle.loads(frame)
+            a = recog.run(message)
 
             #  Do some 'work'
             # time.sleep(0.001)
