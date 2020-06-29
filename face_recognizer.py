@@ -37,3 +37,6 @@ class FaceRecognizer:
 
         message = post_process(people)
         return message
+
+
+active_class = FaceRecognizer
