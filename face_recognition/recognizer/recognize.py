@@ -2,9 +2,7 @@ import time
 
 import numpy as np
 
-from init import embeddings
-from init import labels
-from init import face_net
+from face_recognizer import active_class
 
 
 def recognize_person(frame):
@@ -17,11 +15,11 @@ def recognize_person(frame):
     # face_embedding array
     # DO STUFF
     face = face_embedding(frame)
-    for idx, embed in enumerate(embeddings):
+    for idx, embed in enumerate(active_class.embeddings):
         found, dist = verification(face, embed, "euclidian", 1)
         if found == 1:
-            print(labels[idx])
-            return labels[idx], dist
+            print(active_class.labels[idx])
+            return active_class.labels[idx], dist
 
     # Return person info + frame ?
     return "unknown", 100
@@ -63,7 +61,7 @@ def face_embedding(face):
     # standardize for facenet
     standardized = (face_array - face_array.mean()) / face_array.std()
     exp = np.expand_dims(standardized, axis=0)
-    emb = face_net.predict(exp)
+    emb = active_class.face_net.predict(exp)
     return emb[0, :]
 
 
