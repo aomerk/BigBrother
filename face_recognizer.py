@@ -9,6 +9,7 @@ from onnx_tf.backend import prepare
 from face_recognition.middlewares.post_processing.middleware.post_processor import post_process
 from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes
 
+active_class = None
 
 class FaceRecognizer:
     embeddings = []
@@ -20,6 +21,8 @@ class FaceRecognizer:
     face_net = ""
 
     def __init__(self, embeddings_path, labels_path, onnx_path, shape_model_path, recon_model, recon_weights):
+        active_class = self
+
         self.embeddings = np.load(embeddings_path)
         self.labels = np.load(labels_path)
         self.onnx_model = on.load(onnx_path)
@@ -37,6 +40,3 @@ class FaceRecognizer:
 
         message = post_process(people)
         return message
-
-
-active_class = FaceRecognizer
