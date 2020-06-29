@@ -39,7 +39,7 @@ def pre_process_frames(frames, ort_session, input_name):
     return [pre_process_frame(f, ort_session, input_name)[0] for f in frames]
 
 
-def pre_process_frame(frame, ort_session, input_name):
+def pre_process_frame(recognizer, frame, ort_session, input_name):
     """
     Pre-Process a single frame
     :param input_name:
@@ -57,14 +57,14 @@ def pre_process_frame(frame, ort_session, input_name):
     for i in range(boxes.shape[0]):
         box = boxes[i, :]
         f = np.copy(frame)
-        y = align_face(f, box)
+        y = align_face(recognizer, f, box)
         aligned_faces.append(y)
 
     # recognize person
     labels = []
     for i in range(boxes.shape[0]):
         aligned_face = aligned_faces[i]
-        labels.append(recognize_person(aligned_face))
+        labels.append(recognize_person(recognizer, aligned_face))
 
     people = []
     # mark faces
@@ -83,7 +83,7 @@ def pre_process_frame(frame, ort_session, input_name):
     return people
 
 
-def pre_process_bytes(message, ort_session, input_name):
+def pre_process_bytes(recognizer, message, ort_session, input_name):
     frame = pickle.loads(message)
-    a, b = pre_process_frame(frame, ort_session, input_name)
+    a, b = pre_process_frame(recognizer, frame, ort_session, input_name)
     return a
