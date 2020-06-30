@@ -51,7 +51,8 @@ def pre_process_frame(recognizer, frame, ort_session, input_name):
     # detect faces, original frame and face boxes
     a, boxes = detector.find_face(frame, ort_session, input_name)
 
-    # align faces
+
+    # align facesq
     aligned_faces = []
     boxes[boxes < 0] = 0
     for i in range(boxes.shape[0]):
@@ -76,14 +77,20 @@ def pre_process_frame(recognizer, frame, ort_session, input_name):
         cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         text = f"user: {labels[i]}"
-        pers = FaceFrame(x1, y1, x2, y2, labels[i])
-        people = people.append(pers)
+
+        #pers = FaceFrame(x1, y1, x2, y2, labels[i])
+
+        people.append(text)
+
         cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
 
     return people
 
 
 def pre_process_bytes(recognizer, message, ort_session, input_name):
+
     frame = pickle.loads(message)
-    a, b = pre_process_frame(recognizer, frame, ort_session, input_name)
+
+    a = pre_process_frame(recognizer, frame, ort_session, input_name)
+
     return a

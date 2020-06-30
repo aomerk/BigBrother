@@ -1,6 +1,6 @@
 # Global Variables
-import pickle
 
+import pickle
 import cv2
 
 from face_recognition.middlewares.post_processing.middleware.post_processor import post_process

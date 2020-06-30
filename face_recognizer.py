@@ -1,11 +1,14 @@
+import os
+
 import dlib
 import numpy as np
 import onnx as on
 import onnxruntime as ort
+import pickle
 from imutils import face_utils
 from keras.models import load_model
 from onnx_tf.backend import prepare
-
+import cv2
 from face_recognition.middlewares.post_processing.post_processor import post_process
 from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes
 
@@ -24,7 +27,15 @@ class FaceRecognizer:
         self.face_net.load_weights(recon_weights)
 
     def run(self, message):
-        people = pre_process_bytes(self, message)
 
-        message = post_process(self, people)
-        return message
+        people = pre_process_bytes(self, message, self.ort_session, self.input_name)
+
+        #message = post_process(self, people)
+        return people
+
+
+temp = FaceRecognizer(os.getenv("emb_path"), os.getenv("label_path"), os.getenv("onnx_path"), os.getenv("shape_path"), os.getenv("recon_model_path"),os.getenv("recon_weights_path"))
+img = cv2.imread("01.jpg")
+tmp = pickle.dumps(img)
+
+temp.run(tmp)

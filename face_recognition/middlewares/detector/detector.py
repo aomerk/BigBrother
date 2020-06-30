@@ -1,3 +1,5 @@
+import pickle
+
 import cv2
 import numpy as np
 
@@ -113,6 +115,7 @@ def predict(width, height, confidences, boxes, prob_threshold, iou_threshold=0.5
 
 
 def find_face(frame, ort_session, input_name) -> (any, any):
+
     h, w, _ = frame.shape
 
     # preprocess img acquired
