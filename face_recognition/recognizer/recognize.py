@@ -19,7 +19,7 @@ def recognize_person(recognizer, frame):
             return recognizer.labels[idx], dist
 
     # Return person info + frame ?
-    return "unknown", 100
+    return "unknown", dist
 
 
 def verification(recognizer, face1, face2, dist_type, l2):
