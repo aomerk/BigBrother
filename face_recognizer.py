@@ -33,9 +33,9 @@ class FaceRecognizer:
         #message = post_process(self, people)
         return people
 
+if __name__ == "__main__":
+	temp = FaceRecognizer(os.getenv("emb_path"), os.getenv("label_path"), os.getenv("onnx_path"), os.getenv("shape_path"), os.getenv("recon_model_path"),os.getenv("recon_weights_path"))
+	img = cv2.imread("01.jpg")
+	tmp = pickle.dumps(img)
 
-temp = FaceRecognizer(os.getenv("emb_path"), os.getenv("label_path"), os.getenv("onnx_path"), os.getenv("shape_path"), os.getenv("recon_model_path"),os.getenv("recon_weights_path"))
-img = cv2.imread("01.jpg")
-tmp = pickle.dumps(img)
-
-temp.run(tmp)
+	temp.run(tmp)
