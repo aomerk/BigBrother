@@ -9,8 +9,8 @@ from imutils import face_utils
 from keras.models import load_model
 from onnx_tf.backend import prepare
 import cv2
-from face_recognition.middlewares.post_processing.post_processor import post_process
-from face_recognition.middlewares.pre_processing.pre_processor import pre_process_bytes
+
+from face_recognition.middlewares.pre_processing.pre_processor import pre_process_frame
 
 class FaceRecognizer:
     def __init__(self, embeddings_path, labels_path, onnx_path, shape_model_path, recon_model, recon_weights):
@@ -26,16 +26,10 @@ class FaceRecognizer:
         self.face_net = load_model(recon_model, compile=False)
         self.face_net.load_weights(recon_weights)
 
-    def run(self, message):
-
-        people = pre_process_bytes(self, message, self.ort_session, self.input_name)
-
-        #message = post_process(self, people)
-        return people
+    def run(self, frame):
+        return pre_process_frame(self, frame, self.ort_session, self.input_name)
 
 if __name__ == "__main__":
 	temp = FaceRecognizer(os.getenv("emb_path"), os.getenv("label_path"), os.getenv("onnx_path"), os.getenv("shape_path"), os.getenv("recon_model_path"),os.getenv("recon_weights_path"))
 	img = cv2.imread("01.jpg")
-	tmp = pickle.dumps(img)
-
-	temp.run(tmp)
+	temp.run(img)

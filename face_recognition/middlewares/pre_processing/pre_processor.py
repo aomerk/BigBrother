@@ -7,25 +7,13 @@ from face_recognition.middlewares.detector import detector
 from face_recognition.middlewares.pre_processing.align_faces import align_face
 from face_recognition.recognizer.recognize import recognize_person
 
-
 class Person:
-    def __init__(self, name):
+    def __init__(self, name, x1, y1, x2, y2):
         self.name = name
-
-
-class FaceFrame:
-    def set_person(self, person):
-        self.person = person
-
-    def get_person(self) -> Person:
-        return self.person
-
-    def __init__(self, top_start, top_end, bottom_start, bottom_end, name):
-        self.person = Person(name)
-        self.top_start = top_start
-        self.top_end = top_end
-        self.bottom_start = bottom_start
-        self.bottom_end = bottom_end
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
 
 
 def pre_process_frames(frames, ort_session, input_name):
@@ -68,29 +56,15 @@ def pre_process_frame(recognizer, frame, ort_session, input_name):
         labels.append(recognize_person(recognizer, aligned_face))
 
     people = []
-    # mark faces
     for i in range(boxes.shape[0]):
-        box = boxes[i, :]
-        x1, y1, x2, y2 = box
+        name = labels[i]
+        x1, y1, x2, y2 = boxes[i, :]
+
+        # draw to input frame (for debuging)
         cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
-
         cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
-        font = cv2.FONT_HERSHEY_DUPLEX
-        text = f"user: {labels[i]}"
+        cv2.putText(frame, f"user: {name}", (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
-        #pers = FaceFrame(x1, y1, x2, y2, labels[i])
-
-        people.append(text)
-
-        cv2.putText(frame, text, (x1 + 6, y2 - 6), font, 0.5, (255, 255, 255), 1)
+        people.append(Person(name, x1, y1, x2, y2))
 
     return people
-
-
-def pre_process_bytes(recognizer, message, ort_session, input_name):
-
-    frame = pickle.loads(message)
-
-    a = pre_process_frame(recognizer, frame, ort_session, input_name)
-
-    return a
