@@ -30,6 +30,16 @@ class FaceRecognizer:
         return pre_process_frame(self, frame, self.ort_session, self.input_name)
 
 if __name__ == "__main__":
-	temp = FaceRecognizer(os.getenv("emb_path"), os.getenv("label_path"), os.getenv("onnx_path"), os.getenv("shape_path"), os.getenv("recon_model_path"),os.getenv("recon_weights_path"))
-	img = cv2.imread("01.jpg")
-	temp.run(img)
+    embeddings_path="face_recognition/models/embs_database.npy"
+    labels_path="face_recognition/models/labels_database.npy"
+    onnx_path="face_recognition/models/ultra_light_640.onnx"
+    shape_model_path="face_recognition/models/shape_predictor_5_face_landmarks.dat"
+    recon_model="face_recognition/models/facenet_keras.h5"
+    recon_weights="face_recognition/models/facenet_keras_weights.h5"
+
+    temp = FaceRecognizer(embeddings_path, labels_path, onnx_path, shape_model_path, recon_model, recon_weights)
+    img = cv2.imread("01.jpg")
+    print("run")
+    for res in temp.run(img):
+        print(res.name)
+        print(f"({res.x1}, {res.y1}, {res.x2}, {res.y2})")
