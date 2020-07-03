@@ -58,7 +58,9 @@ def face_embedding(recognizer, face):
     # standardize for facenet
     standardized = (face_array - face_array.mean()) / face_array.std()
     exp = np.expand_dims(standardized, axis=0)
-    emb = recognizer.face_net.predict(exp)
+
+    with recognizer.graph.as_default():
+        emb = recognizer.face_net.predict(exp)
     return emb[0, :]
 
 
