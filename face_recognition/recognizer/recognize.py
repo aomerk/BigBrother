@@ -2,6 +2,8 @@ import time
 
 import numpy as np
 
+from keras.backend import set_session
+
 def recognize_person(recognizer, frame):
     """
     Recognize person in frame
@@ -60,6 +62,7 @@ def face_embedding(recognizer, face):
     exp = np.expand_dims(standardized, axis=0)
 
     with recognizer.graph.as_default():
+        set_session(recognizer.session)
         emb = recognizer.face_net.predict(exp)
     return emb[0, :]
 

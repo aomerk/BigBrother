@@ -6,16 +6,24 @@ import onnx as on
 import onnxruntime as ort
 import pickle
 from imutils import face_utils
+
 from keras.models import load_model
+from keras.backend import set_session
+
 from onnx_tf.backend import prepare
 import cv2
 import tensorflow as tf
 
 from face_recognition.middlewares.pre_processing.pre_processor import pre_process_frame
 
+
 class FaceRecognizer:
     def __init__(self, embeddings_path, labels_path, onnx_path, shape_model_path, recon_model, recon_weights):
+        self.session = tf.Session()
         self.graph = tf.get_default_graph()
+
+        set_session(self.session)
+
         self.embeddings = np.load(embeddings_path)
         self.labels = np.load(labels_path)
         self.onnx_model = on.load(onnx_path)
