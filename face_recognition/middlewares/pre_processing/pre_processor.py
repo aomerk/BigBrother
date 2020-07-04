@@ -57,13 +57,13 @@ def pre_process_frame(recognizer, frame, ort_session, input_name):
 
     people = []
     for i in range(boxes.shape[0]):
-        name = labels[i]
+        name, dist = labels[i]
         x1, y1, x2, y2 = boxes[i, :]
 
         # draw to input frame (for debuging)
         cv2.rectangle(frame, (x1, y1), (x2, y2), (80, 18, 236), 2)
         cv2.rectangle(frame, (x1, y2 - 20), (x2, y2), (80, 18, 236), cv2.FILLED)
-        cv2.putText(frame, f"user: {name}", (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(frame, f"user: {name} {dist}", (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
         people.append(Person(name, x1, y1, x2, y2))
 
