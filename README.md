@@ -1,17 +1,4 @@
+universal face recognition - no need to train for different faces.  
 # BigBrother
-
-## Status
-
-[![Build Status](https://travis-ci.com/aomerk/BigBrother.svg?token=qz5dawjiFydxThABmyYH&branch=master)](https://travis-ci.com/aomerk/BigBrother)
-
-## Subproject Groups
-
-Face Recognition - Ilayda and Ali
-
-## Design Decisions
-
-### Version Control
-
-* [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) - Please use Gitflow as workflow
-
+documentation coming soon
 
